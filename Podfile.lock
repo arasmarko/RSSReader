@@ -1,0 +1,41 @@
+PODS:
+  - Realm (3.2.0):
+    - Realm/Headers (= 3.2.0)
+  - Realm/Headers (3.2.0)
+  - RealmSwift (3.2.0):
+    - Realm (= 3.2.0)
+  - RxCocoa (4.1.2):
+    - RxSwift (~> 4.0)
+  - RxKeyboard (0.8.1):
+    - RxCocoa (>= 4.0.0)
+    - RxSwift (>= 4.0.0)
+  - RxSwift (4.1.2)
+  - SnapKit (4.0.0)
+
+DEPENDENCIES:
+  - RealmSwift
+  - RxCocoa (~> 4.0)
+  - RxKeyboard
+  - RxSwift (~> 4.0)
+  - SnapKit (~> 4.0.0)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - Realm
+    - RealmSwift
+    - RxCocoa
+    - RxKeyboard
+    - RxSwift
+    - SnapKit
+
+SPEC CHECKSUMS:
+  Realm: ae552b9b9eca3a12374a589fa842f220e286a80a
+  RealmSwift: 05727129547dcab3fe828bd87bc30be903736b9c
+  RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
+  RxKeyboard: 28d984440671becc75350b1dfae7ae08d31076df
+  RxSwift: e49536837d9901277638493ea537394d4b55f570
+  SnapKit: a42d492c16e80209130a3379f73596c3454b7694
+
+PODFILE CHECKSUM: 7f57a7ac51f1ef208e5ba9b00ec47cb87fc12fab
+
+COCOAPODS: 1.5.0
