@@ -6,22 +6,15 @@
 //  Copyright © 2018 arasmarko. All rights reserved.
 //
 
-import Foundation
+import RealmSwift
 
-class Story: Hashable {
-    var id: Int
-    var name: String
+class Story: Object {
+    var id: Int = -1
+    var name: String = ""
 
-    init(id: Int, name: String) {
+    convenience init(id: Int, name: String) {
+        self.init()
         self.id = id
         self.name = name
-    }
-
-    var hashValue: Int {
-        return id
-    }
-
-    static func == (lhs: Story, rhs: Story) -> Bool {
-        return lhs.id == rhs.id
     }
 }

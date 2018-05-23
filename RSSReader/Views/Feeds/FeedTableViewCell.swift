@@ -27,7 +27,9 @@ class FeedTableViewCell: UITableViewCell {
 
     func setupCell(feedItem: Feed) {
         testLabel.text = feedItem.name
-        imageView?.image = feedItem.image
+        if let imageName = feedItem.imageName {
+            imageView?.image = UIImage(named: imageName)
+        }
     }
 }
 

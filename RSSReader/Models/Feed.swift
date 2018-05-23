@@ -7,16 +7,25 @@
 //
 
 import Foundation
-import UIKit
+import RealmSwift
 
-class Feed {
-    var name: String
-    var image: UIImage?
-    var stories: Set<Story>
+class Feed: Object {
+    @objc dynamic var name: String = ""
+    @objc dynamic var imageName: String? = nil
+    var stories: List<Story> = List<Story>()
 
-    init(name: String, image: UIImage?, stories: Set<Story>) {
+    convenience init(name: String, imageName: String?, stories: List<Story>) {
+        self.init()
         self.name = name
-        self.image = image
+        self.imageName = imageName
         self.stories = stories
+    }
+}
+
+class FeedRealmService {
+    static func add(feed: Feed, in realm: Realm = try! Realm()) {
+        try! realm.write {
+            realm.add(feed)
+        }
     }
 }
