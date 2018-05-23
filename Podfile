@@ -10,6 +10,7 @@ pod 'RealmSwift'
   pod 'SnapKit', '~> 4.0.0'
   pod 'RxKeyboard'
   pod 'RxRealm'
+  pod 'FeedKit', '~> 6.0'
 
 
   target 'RSSReaderTests' do

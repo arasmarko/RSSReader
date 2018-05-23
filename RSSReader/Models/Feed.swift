@@ -10,14 +10,14 @@ import Foundation
 import RealmSwift
 
 class Feed: Object {
-    @objc dynamic var name: String = ""
-    @objc dynamic var imageName: String? = nil
+    var name: String = ""
+    var imageUrl: String? = nil
     var stories: List<Story> = List<Story>()
 
     convenience init(name: String, imageName: String?, stories: List<Story>) {
         self.init()
         self.name = name
-        self.imageName = imageName
+        self.imageUrl = imageName
         self.stories = stories
     }
 }

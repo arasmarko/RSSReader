@@ -9,12 +9,16 @@
 import RealmSwift
 
 class Story: Object {
-    var id: Int = -1
-    var name: String = ""
+    var title: String = ""
+    var link: String = ""
+    var info: String = ""
+    var imageUrl: String? = nil
 
-    convenience init(id: Int, name: String) {
+    convenience init(title: String, link: String, info: String, imageUrl: String) {
         self.init()
-        self.id = id
-        self.name = name
+        self.title = title
+        self.link = link
+        self.info = info
+        self.imageUrl = imageUrl
     }
 }

@@ -70,7 +70,7 @@ class FeedsViewController: UIViewController {
         addFeedBarButton.rx
             .tap
             .subscribe(onNext: { [weak self] (indexPath) in
-                print("create")
+                print("create")    
 //                let storyVC = StoryViewController()
 //                self?.navigationController?.pushViewController(storyVC, animated: true)
             })

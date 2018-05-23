@@ -1,4 +1,5 @@
 PODS:
+  - FeedKit (6.2.0)
   - Realm (3.2.0):
     - Realm/Headers (= 3.2.0)
   - Realm/Headers (3.2.0)
@@ -16,6 +17,7 @@ PODS:
   - SnapKit (4.0.0)
 
 DEPENDENCIES:
+  - FeedKit (~> 6.0)
   - RealmSwift
   - RxCocoa (~> 4.0)
   - RxKeyboard
@@ -25,6 +27,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
+    - FeedKit
     - Realm
     - RealmSwift
     - RxCocoa
@@ -34,6 +37,7 @@ SPEC REPOS:
     - SnapKit
 
 SPEC CHECKSUMS:
+  FeedKit: 48e371d0884b3bc7d87253f5ae3313c91d2a7e72
   Realm: ae552b9b9eca3a12374a589fa842f220e286a80a
   RealmSwift: 05727129547dcab3fe828bd87bc30be903736b9c
   RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
@@ -42,6 +46,6 @@ SPEC CHECKSUMS:
   RxSwift: e49536837d9901277638493ea537394d4b55f570
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
 
-PODFILE CHECKSUM: ebb6312441045c441bc1a1517dd4bf4cc8e13581
+PODFILE CHECKSUM: f70c5f6ebe57585583c246b0f78841720bd9751f
 
 COCOAPODS: 1.5.0
