@@ -6,13 +6,19 @@
 //  Copyright © 2018 arasmarko. All rights reserved.
 //
 
+import RealmSwift
 import UIKit
 
 class StoryViewController: UIViewController {
 
+    @IBOutlet weak var testL: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        view.backgroundColor = .red
+    }
+
+    func setStories(stories: List<Story>) {
+        testL.text = "\(stories.count)"
     }
 }

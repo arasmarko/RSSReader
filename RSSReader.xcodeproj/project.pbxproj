@@ -21,6 +21,7 @@
 		FBD4877B20B491F900B01A65 /* FeedsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD4877A20B491F900B01A65 /* FeedsService.swift */; };
 		FBD4878120B496E600B01A65 /* StoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD4877F20B496E600B01A65 /* StoryViewController.swift */; };
 		FBD4878220B496E600B01A65 /* StoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBD4878020B496E600B01A65 /* StoryViewController.xib */; };
+		FBFBB78F20B6087300AA83B3 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBFBB78E20B6087300AA83B3 /* UIImageView+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		FBD4877A20B491F900B01A65 /* FeedsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedsService.swift; sourceTree = "<group>"; };
 		FBD4877F20B496E600B01A65 /* StoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryViewController.swift; sourceTree = "<group>"; };
 		FBD4878020B496E600B01A65 /* StoryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StoryViewController.xib; sourceTree = "<group>"; };
+		FBFBB78E20B6087300AA83B3 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +123,7 @@
 		FB5D8D8120B488DC00F6D105 /* RSSReader */ = {
 			isa = PBXGroup;
 			children = (
+				FBFBB78D20B6085200AA83B3 /* Extensions */,
 				FB5D8D8E20B488DF00F6D105 /* Info.plist */,
 				FB5D8DA720B48A0B00F6D105 /* Flows */,
 				FB5D8DA620B48A0500F6D105 /* Services */,
@@ -208,6 +211,14 @@
 				FBD4878020B496E600B01A65 /* StoryViewController.xib */,
 			);
 			path = Story;
+			sourceTree = "<group>";
+		};
+		FBFBB78D20B6085200AA83B3 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				FBFBB78E20B6087300AA83B3 /* UIImageView+Extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -318,6 +329,7 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-RSSReader/Pods-RSSReader-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/FeedKit/FeedKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
@@ -329,6 +341,7 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FeedKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
@@ -388,6 +401,7 @@
 				FB5D8DAB20B48AF500F6D105 /* FeedsViewController.swift in Sources */,
 				FBD4877920B490B600B01A65 /* FeedTableViewCell.swift in Sources */,
 				FBD4877B20B491F900B01A65 /* FeedsService.swift in Sources */,
+				FBFBB78F20B6087300AA83B3 /* UIImageView+Extension.swift in Sources */,
 				FBD4877520B48F5900B01A65 /* Feed.swift in Sources */,
 				FBD4878120B496E600B01A65 /* StoryViewController.swift in Sources */,
 				FBD4877220B48E8400B01A65 /* FeedsViewModel.swift in Sources */,
@@ -548,7 +562,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8V5BSN48AT;
 				INFOPLIST_FILE = RSSReader/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = aras.marko.RSSReader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -564,7 +581,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8V5BSN48AT;
 				INFOPLIST_FILE = RSSReader/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = aras.marko.RSSReader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -581,7 +601,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8V5BSN48AT;
 				INFOPLIST_FILE = RSSReaderTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = aras.marko.RSSReaderTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -599,7 +623,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8V5BSN48AT;
 				INFOPLIST_FILE = RSSReaderTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = aras.marko.RSSReaderTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

@@ -14,7 +14,7 @@ class Story: Object {
     var info: String = ""
     var imageUrl: String? = nil
 
-    convenience init(title: String, link: String, info: String, imageUrl: String) {
+    convenience init(title: String, link: String, info: String, imageUrl: String?) {
         self.init()
         self.title = title
         self.link = link

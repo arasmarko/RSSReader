@@ -10,20 +10,23 @@ import Foundation
 import RealmSwift
 
 class Feed: Object {
-    var name: String = ""
-    var imageUrl: String? = nil
+    @objc dynamic var title: String = ""
+    @objc dynamic var imageUrl: String? = nil
     var stories: List<Story> = List<Story>()
 
-    convenience init(name: String, imageName: String?, stories: List<Story>) {
+    convenience init(title: String, imageUrl: String?, stories: List<Story>) {
         self.init()
-        self.name = name
-        self.imageUrl = imageName
+        self.title = title
+        self.imageUrl = imageUrl
         self.stories = stories
     }
 }
 
 class FeedRealmService {
+    /// Adds Feed to Realm and makes sure it is uniq
     static func add(feed: Feed, in realm: Realm = try! Realm()) {
+        let isFeedUniq = realm.objects(Feed.self).filter("title = '\(feed.title)'").isEmpty
+        guard isFeedUniq else { return }
         try! realm.write {
             realm.add(feed)
         }

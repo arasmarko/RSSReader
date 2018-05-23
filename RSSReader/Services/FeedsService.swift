@@ -28,12 +28,13 @@ class FeedsService: FeedsServiceProtocol {
         print("maki", loadFeedsFromUrl())
 
         feedsFromURL.asObservable()
-            .subscribe(onNext: { (a) in
-                print("next", a)
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { (newFeed) in
+                FeedRealmService.add(feed: newFeed, in: realm)
             })
+            .disposed(by: disposeBag)
 
         return Observable.array(from: feeds)
-            .debug()
             .map({ $0 })
 
     }
@@ -48,10 +49,11 @@ class FeedsService: FeedsServiceProtocol {
         feedURLs.append(feedURL2)
         feedURLs.append(feedURL3)
         feedURLs.append(feedURL4)
-        var feed: RSSFeed?
+
         var parser: FeedParser!
 
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            guard let `self` = self else { return }
             var total = 0
             for url in feedURLs {
                 parser = FeedParser(URL: url)
@@ -62,14 +64,28 @@ class FeedsService: FeedsServiceProtocol {
                 case .rss(let feed):
                     total += 1
                     print("IMG", feed.image?.url)
-//                    Feed(name: feed.title, imageName: feed.image, stories: <#T##List<Story>#>)
-//                    self.feedsFromURL.onNext()
+                    let newFeed = self.createFeedWithStories(feed: feed)
+                    self.feedsFromURL.onNext(newFeed)
                 default:
                     break
                 }
             }
+            self.feedsFromURL.onCompleted()
         }
+    }
 
-        self.feedsFromURL.onCompleted()
+    func createFeedWithStories(feed: RSSFeed) -> Feed {
+        let stories = List<Story>()
+        for story in feed.items ?? [] {
+            if let title = story.title,
+                let link = story.link,
+                let desc = story.description {
+                    let s = Story(title: title, link: link, info: desc, imageUrl: nil)
+                stories.append(s)
+            }
+
+        }
+        let feed = Feed(title: feed.title ?? "no title", imageUrl: feed.image?.url, stories: stories)
+        return feed
     }
 }

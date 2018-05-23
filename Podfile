@@ -11,6 +11,7 @@ pod 'RealmSwift'
   pod 'RxKeyboard'
   pod 'RxRealm'
   pod 'FeedKit', '~> 6.0'
+  pod 'Kingfisher', '~> 4.0'
 
 
   target 'RSSReaderTests' do

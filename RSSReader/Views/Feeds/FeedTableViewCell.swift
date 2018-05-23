@@ -14,7 +14,6 @@ class FeedTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
         self.addSubview(testLabel)
         testLabel.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
@@ -26,7 +25,12 @@ class FeedTableViewCell: UITableViewCell {
     }
 
     func setupCell(feedItem: Feed) {
-        testLabel.text = feedItem.name
+        testLabel.text = feedItem.title
+        if let urlString = feedItem.imageUrl, let url = URL(string: urlString) {
+            imageView?.downloadImage(url)
+        }
+        imageView?.contentMode = .scaleAspectFit
+        imageView?.clipsToBounds = true // TODO
     }
 }
 

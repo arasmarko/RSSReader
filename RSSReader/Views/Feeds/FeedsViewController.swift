@@ -70,17 +70,18 @@ class FeedsViewController: UIViewController {
         addFeedBarButton.rx
             .tap
             .subscribe(onNext: { [weak self] (indexPath) in
-                print("create")    
-//                let storyVC = StoryViewController()
-//                self?.navigationController?.pushViewController(storyVC, animated: true)
+                print("create")
             })
             .disposed(by: disposeBag)
 
         tableView.rx
             .itemSelected
             .subscribe(onNext: { [weak self] (indexPath) in
-                let storyVC = StoryViewController()
-                self?.navigationController?.pushViewController(storyVC, animated: true)
+                guard let `self` = self else { return }
+                let storyVC = StoryViewController(nibName: "StoryViewController", bundle: nil)
+                storyVC.viewDidLoad() // TODO
+                storyVC.setStories(stories: self.dataSource[indexPath.row].stories)
+                self.navigationController?.pushViewController(storyVC, animated: true)
             })
             .disposed(by: disposeBag)
 
