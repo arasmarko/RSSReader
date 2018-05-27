@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -24,6 +25,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let feedsViewController = FeedsViewController(viewModel: feedsViewModel)
         let navigationController = UINavigationController(rootViewController: feedsViewController)
         window.rootViewController = navigationController
+
+        let center = UNUserNotificationCenter.current()
+        let options: UNAuthorizationOptions = [.alert, .sound, .badge];
+        center.requestAuthorization(options: options) { (granted, error) in
+            if granted {
+                print("Authorization granted")
+            }
+        }
+
         return true
     }
 }

@@ -21,14 +21,12 @@ class FeedRealmService {
         }
 
         try! realm.write {
-            print("adding new", feed.title, feed.stories.first?.title)
             realm.add(feed)
         }
     }
 
     private func updateFeedWithNewStories(_ oldFeed: Feed, newFeed: Feed) {
         try! realm.write {
-            print("updating old", oldFeed.title, oldFeed.stories.first?.title)
             oldFeed.updateStories(from: newFeed)
         }
     }

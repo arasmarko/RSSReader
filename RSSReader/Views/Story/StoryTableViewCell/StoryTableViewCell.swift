@@ -18,7 +18,6 @@ class StoryTableViewCell: UITableViewCell {
     }
 
     func setupCell(story: Story) {
-        print("setupCell", story.title)
         titleLabel.text = story.title
         if let link = story.imageUrl, let url = URL(string: link) {
             storyImageView.downloadImage(url)

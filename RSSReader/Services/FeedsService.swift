@@ -33,11 +33,7 @@ class FeedsService: FeedsServiceProtocol {
         loadFeedsFromUrl()
         observeOnFeedsFromURL()
 
-        return Observable.collection(from: feeds)//.array(from: feeds)
-            .map({ $0.toArray() })
-            .do(onNext: { (feeds) in
-                print("Observable.array", feeds.count, feeds.first?.title, feeds.first?.stories.first?.title)
-            })
+        return Observable.array(from: feeds)
     }
 
     func observeOnFeedsFromURL() {
@@ -45,7 +41,6 @@ class FeedsService: FeedsServiceProtocol {
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] (newFeed) in
                 guard let `self` = self else { return }
-                print("observeOnFeedsFromURL", newFeed.title, newFeed.stories.first?.title)
                 self.feedRealmService.syncRealmWithNewData(feed: newFeed)
             })
             .disposed(by: disposeBag)
@@ -64,12 +59,12 @@ class FeedsService: FeedsServiceProtocol {
     }
 
     private func loadFeedFromUrl(url: URL) {
-        var parser: FeedParser!
-        parser = FeedParser(URL: url)
-        let results = parser.parse()
+        let parser: FeedParser? = FeedParser(URL: url)
+        guard let results = parser?.parse() else {
+            return
+        }
         switch results {
         case .rss(let feedData):
-            print("loaded FeedFromUrl", feedData.title, feedData.items?.count, feedData.items?.last?.title)
             createFeedFromDataAndSaveToRealm(data: feedData)
         default:
             break
@@ -81,25 +76,14 @@ class FeedsService: FeedsServiceProtocol {
         self.feedsFromURL.onNext(newFeed)
     }
 
-    // TODO
     func saveNewFeedUrlString(_ new: String) {
         guard let url = URL(string: new) else { return }
         do {
             try savedFeedsListService.saveNewFeedUrlString(urlString: new)
 
-            var parser: FeedParser!
-
             DispatchQueue.global(qos: .background).async { [weak self] in
                 guard let `self` = self else { return }
-                parser = FeedParser(URL: url)
-
-                let results = parser.parse()
-                switch results {
-                case .rss(let feed):
-                    self.createFeedFromDataAndSaveToRealm(data: feed)
-                default:
-                    break
-                }
+                self.loadFeedFromUrl(url: url)
             }
         } catch {
             print("item already saved")

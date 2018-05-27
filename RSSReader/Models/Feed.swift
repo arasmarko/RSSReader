@@ -32,7 +32,6 @@ class Feed: Object {
                 stories.append(newStory)
             }
         }
-        print("createFeedWithStories", feedData.title, stories.first?.title)
         let feed = Feed(title: feedData.title ?? "no title", imageUrl: feedData.image?.url, stories: stories)
         feed.stories = stories
         return feed
@@ -40,13 +39,21 @@ class Feed: Object {
 
     func updateStories(from anotherFeed: Feed) {
         // TODO - find better solution for distincting
-        var existingStories = Set<Story>(stories)
+        var existingStoryTitles = Set<String>(stories.map({ $0.title }))//stories
+        var storiesToInsert = [Story]()
 
         for newStory in anotherFeed.stories {
-            existingStories.insert(newStory)
+            if existingStoryTitles.index(of: newStory.title) == nil {
+                existingStoryTitles.insert(newStory.title)
+                storiesToInsert.append(newStory)
+            }
         }
+        if storiesToInsert.count > 0 {
+            appendNewStoriesAndNotifyUser(storiesToInsert)
+        }
+    }
 
-        stories.removeAll()
-        stories.append(objectsIn: existingStories)
+    private func appendNewStoriesAndNotifyUser(_ storiesToInsert: [Story]) {
+        stories.append(objectsIn: storiesToInsert)
     }
 }

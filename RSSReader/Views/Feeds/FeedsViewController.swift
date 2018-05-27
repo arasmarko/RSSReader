@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import UserNotifications
 
 class FeedsViewController: UIViewController {
     private let viewModel: FeedsViewModelProtocol!
@@ -62,9 +63,11 @@ class FeedsViewController: UIViewController {
 
     private func setupObservables() {
         viewModel.feedItems
+            .do(onNext: { [weak self] (feeds) in
+                self?.notifyUserThereAreNewStories()
+            })
             .subscribe(onNext: { (feeds) in
                 self.dataSource = feeds
-                print("dataSource", self.dataSource.first?.title, self.dataSource.first?.stories.last?.title)
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -72,7 +75,6 @@ class FeedsViewController: UIViewController {
         addFeedBarButton.rx
             .tap
             .subscribe(onNext: { [weak self] (indexPath) in
-                print("create")
                 self?.askUserUrlForNewFeed()
             })
             .disposed(by: disposeBag)
@@ -87,6 +89,19 @@ class FeedsViewController: UIViewController {
                 self.navigationController?.pushViewController(storyVC, animated: true)
             })
             .disposed(by: disposeBag)
+    }
+
+    private func notifyUserThereAreNewStories() {
+        let center = UNUserNotificationCenter.current()
+        let content = UNMutableNotificationContent()
+        content.title = "RSS Reader has something new for you"
+        content.body = "Catch up by reading new stories"
+        content.sound = UNNotificationSound.default()
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let identifier = "RSSReader"
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        center.add(request, withCompletionHandler: nil)
     }
 
     func askUserUrlForNewFeed() {

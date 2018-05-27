@@ -8,12 +8,15 @@
 
 import RealmSwift
 import UIKit
+import RxSwift
+import SafariServices
 
 class StoryViewController: UIViewController {
-
     @IBOutlet weak var tableView: UITableView!
-    let cellReuseIdentifier = "StoryTableViewCell"
-    var dataSource: [Story] = []
+
+    private let cellReuseIdentifier = "StoryTableViewCell"
+    private var dataSource: [Story] = []
+    private let disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,13 +25,42 @@ class StoryViewController: UIViewController {
         tableView.rowHeight = 60
         let nib = UINib(nibName: "StoryTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: cellReuseIdentifier)
+        setupObservables()
     }
 
     func setStories(stories: List<Story>) {
-        print("Stories1", dataSource.count)
-        dataSource = Array(stories.toArray())
-        print("Stories2", dataSource.count)
+        dataSource = stories.toArray()
         tableView.reloadData()
+    }
+
+    func setupObservables() {
+        tableView.rx
+            .itemSelected
+            .subscribe(onNext: { [weak self] (indexPath) in
+                guard let `self` = self else { return }
+                self.presentSafariView(link: self.dataSource[indexPath.row].link)
+            })
+            .disposed(by: disposeBag)
+    }
+
+    private func presentSafariView(link: String) {
+        if let url = URL(string: link) {
+            let config = SFSafariViewController.Configuration()
+            config.entersReaderIfAvailable = true
+            let svc = SFSafariViewController(url: url, configuration: config)
+
+            svc.delegate = self
+            self.present(svc, animated: true, completion: nil)
+        } else {
+            print("WEBSITE ERROR :\(link)")
+        }
+    }
+}
+
+// Safari view
+extension StoryViewController: SFSafariViewControllerDelegate {
+    func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        controller.dismiss(animated: true, completion: nil)
     }
 }
 
