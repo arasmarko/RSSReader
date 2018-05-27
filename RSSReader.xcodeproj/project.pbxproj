@@ -14,6 +14,11 @@
 		FB5D8D8D20B488DF00F6D105 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB5D8D8B20B488DF00F6D105 /* LaunchScreen.storyboard */; };
 		FB5D8D9820B488DF00F6D105 /* RSSReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5D8D9720B488DF00F6D105 /* RSSReaderTests.swift */; };
 		FB5D8DAB20B48AF500F6D105 /* FeedsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5D8DAA20B48AF500F6D105 /* FeedsViewController.swift */; };
+		FB7FCFC820B71FF5009AF779 /* FeedListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7FCFC720B71FF5009AF779 /* FeedListService.swift */; };
+		FB8CF79420BAD6ED00986A74 /* FeedUrlString.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8CF79320BAD6ED00986A74 /* FeedUrlString.swift */; };
+		FB8CF79620BADB3B00986A74 /* FeedRealmService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8CF79520BADB3B00986A74 /* FeedRealmService.swift */; };
+		FB8CF79920BAEAAB00986A74 /* StoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8CF79720BAEAAB00986A74 /* StoryTableViewCell.swift */; };
+		FB8CF79A20BAEAAB00986A74 /* StoryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB8CF79820BAEAAB00986A74 /* StoryTableViewCell.xib */; };
 		FBD4877220B48E8400B01A65 /* FeedsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD4877120B48E8400B01A65 /* FeedsViewModel.swift */; };
 		FBD4877520B48F5900B01A65 /* Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD4877420B48F5900B01A65 /* Feed.swift */; };
 		FBD4877720B48F7400B01A65 /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD4877620B48F7400B01A65 /* Story.swift */; };
@@ -50,6 +55,11 @@
 		FB5D8D9720B488DF00F6D105 /* RSSReaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSReaderTests.swift; sourceTree = "<group>"; };
 		FB5D8D9920B488DF00F6D105 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB5D8DAA20B48AF500F6D105 /* FeedsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedsViewController.swift; sourceTree = "<group>"; };
+		FB7FCFC720B71FF5009AF779 /* FeedListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedListService.swift; sourceTree = "<group>"; };
+		FB8CF79320BAD6ED00986A74 /* FeedUrlString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedUrlString.swift; sourceTree = "<group>"; };
+		FB8CF79520BADB3B00986A74 /* FeedRealmService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedRealmService.swift; sourceTree = "<group>"; };
+		FB8CF79720BAEAAB00986A74 /* StoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryTableViewCell.swift; sourceTree = "<group>"; };
+		FB8CF79820BAEAAB00986A74 /* StoryTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StoryTableViewCell.xib; sourceTree = "<group>"; };
 		FBD4877120B48E8400B01A65 /* FeedsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedsViewModel.swift; sourceTree = "<group>"; };
 		FBD4877420B48F5900B01A65 /* Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feed.swift; sourceTree = "<group>"; };
 		FBD4877620B48F7400B01A65 /* Story.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Story.swift; sourceTree = "<group>"; };
@@ -149,6 +159,7 @@
 			children = (
 				FBD4877420B48F5900B01A65 /* Feed.swift */,
 				FBD4877620B48F7400B01A65 /* Story.swift */,
+				FB8CF79320BAD6ED00986A74 /* FeedUrlString.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -184,6 +195,8 @@
 			isa = PBXGroup;
 			children = (
 				FBD4877A20B491F900B01A65 /* FeedsService.swift */,
+				FB7FCFC720B71FF5009AF779 /* FeedListService.swift */,
+				FB8CF79520BADB3B00986A74 /* FeedRealmService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -193,6 +206,15 @@
 			children = (
 			);
 			path = Flows;
+			sourceTree = "<group>";
+		};
+		FB8CF79B20BAEAAF00986A74 /* StoryTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				FB8CF79720BAEAAB00986A74 /* StoryTableViewCell.swift */,
+				FB8CF79820BAEAAB00986A74 /* StoryTableViewCell.xib */,
+			);
+			path = StoryTableViewCell;
 			sourceTree = "<group>";
 		};
 		FBD4877320B48EE400B01A65 /* Feeds */ = {
@@ -209,6 +231,7 @@
 			children = (
 				FBD4877F20B496E600B01A65 /* StoryViewController.swift */,
 				FBD4878020B496E600B01A65 /* StoryViewController.xib */,
+				FB8CF79B20BAEAAF00986A74 /* StoryTableViewCell */,
 			);
 			path = Story;
 			sourceTree = "<group>";
@@ -308,6 +331,7 @@
 				FB5D8D8D20B488DF00F6D105 /* LaunchScreen.storyboard in Resources */,
 				FB5D8D8A20B488DF00F6D105 /* Assets.xcassets in Resources */,
 				FBD4878220B496E600B01A65 /* StoryViewController.xib in Resources */,
+				FB8CF79A20BAEAAB00986A74 /* StoryTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -401,12 +425,16 @@
 				FB5D8DAB20B48AF500F6D105 /* FeedsViewController.swift in Sources */,
 				FBD4877920B490B600B01A65 /* FeedTableViewCell.swift in Sources */,
 				FBD4877B20B491F900B01A65 /* FeedsService.swift in Sources */,
+				FB7FCFC820B71FF5009AF779 /* FeedListService.swift in Sources */,
 				FBFBB78F20B6087300AA83B3 /* UIImageView+Extension.swift in Sources */,
 				FBD4877520B48F5900B01A65 /* Feed.swift in Sources */,
 				FBD4878120B496E600B01A65 /* StoryViewController.swift in Sources */,
 				FBD4877220B48E8400B01A65 /* FeedsViewModel.swift in Sources */,
 				FB5D8D8320B488DC00F6D105 /* AppDelegate.swift in Sources */,
+				FB8CF79920BAEAAB00986A74 /* StoryTableViewCell.swift in Sources */,
+				FB8CF79420BAD6ED00986A74 /* FeedUrlString.swift in Sources */,
 				FBD4877720B48F7400B01A65 /* Story.swift in Sources */,
+				FB8CF79620BADB3B00986A74 /* FeedRealmService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

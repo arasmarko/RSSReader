@@ -8,6 +8,7 @@
 
 import Foundation
 import RealmSwift
+import FeedKit
 
 class Feed: Object {
     @objc dynamic var title: String = ""
@@ -20,15 +21,32 @@ class Feed: Object {
         self.imageUrl = imageUrl
         self.stories = stories
     }
-}
 
-class FeedRealmService {
-    /// Adds Feed to Realm and makes sure it is uniq
-    static func add(feed: Feed, in realm: Realm = try! Realm()) {
-        let isFeedUniq = realm.objects(Feed.self).filter("title = '\(feed.title)'").isEmpty
-        guard isFeedUniq else { return }
-        try! realm.write {
-            realm.add(feed)
+    static func createFeedWithStories(from feedData: RSSFeed) -> Feed {
+        let stories = List<Story>()
+        for story in feedData.items ?? [] {
+            if let title = story.title,
+                let link = story.link,
+                let desc = story.description {
+                let newStory = Story(title: title, link: link, info: desc, imageUrl: nil)
+                stories.append(newStory)
+            }
         }
+        print("createFeedWithStories", feedData.title, stories.first?.title)
+        let feed = Feed(title: feedData.title ?? "no title", imageUrl: feedData.image?.url, stories: stories)
+        feed.stories = stories
+        return feed
+    }
+
+    func updateStories(from anotherFeed: Feed) {
+        // TODO - find better solution for distincting
+        var existingStories = Set<Story>(stories)
+
+        for newStory in anotherFeed.stories {
+            existingStories.insert(newStory)
+        }
+
+        stories.removeAll()
+        stories.append(objectsIn: existingStories)
     }
 }

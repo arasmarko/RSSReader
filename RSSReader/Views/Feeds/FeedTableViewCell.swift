@@ -10,13 +10,28 @@ import UIKit
 import SnapKit
 
 class FeedTableViewCell: UITableViewCell {
+    let feedImageView = UIImageView()
     let testLabel = UILabel()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        self.addSubview(feedImageView)
+        feedImageView.snp.makeConstraints { (make) in
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.left.equalToSuperview()
+            make.width.equalTo(120)
+        }
+        feedImageView.contentMode = .scaleAspectFit
+        feedImageView.clipsToBounds = true
+
         self.addSubview(testLabel)
         testLabel.snp.makeConstraints { (make) in
-            make.center.equalToSuperview()
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.right.equalToSuperview()
+            make.left.equalTo(feedImageView.snp.right).offset(16)
         }
     }
 
@@ -27,10 +42,8 @@ class FeedTableViewCell: UITableViewCell {
     func setupCell(feedItem: Feed) {
         testLabel.text = feedItem.title
         if let urlString = feedItem.imageUrl, let url = URL(string: urlString) {
-            imageView?.downloadImage(url)
+            feedImageView.downloadImage(url)
         }
-        imageView?.contentMode = .scaleAspectFit
-        imageView?.clipsToBounds = true // TODO
     }
 }
 

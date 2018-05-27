@@ -10,10 +10,12 @@ import RxSwift
 
 protocol FeedsViewModelProtocol {
     var feedItems: Observable<[Feed]>! { get set }
+    var newFeedUrlString: PublishSubject<String> { get set }
 }
 
 class FeedsViewModel: FeedsViewModelProtocol {
     var feedItems: Observable<[Feed]>!
+    var newFeedUrlString = PublishSubject<String>()
 
     private let feedsService: FeedsServiceProtocol
     private let disposeBag = DisposeBag()
@@ -22,6 +24,13 @@ class FeedsViewModel: FeedsViewModelProtocol {
         self.feedsService = feedsService
 
         feedItems = self.feedsService.getFeeds()
+//            .debug()
+
+        newFeedUrlString.asObservable()
+            .subscribe(onNext: { [weak self] (newUrl) in
+                self?.feedsService.saveNewFeedUrlString(newUrl)
+            })
+            .disposed(by: disposeBag)
     }
     
 }

@@ -44,6 +44,7 @@ class FeedsViewController: UIViewController {
         tableView.register(FeedTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         tableView.dataSource = self
         tableView.separatorStyle = .none
+        tableView.rowHeight = 80
     }
 
     private func render() {
@@ -61,8 +62,9 @@ class FeedsViewController: UIViewController {
 
     private func setupObservables() {
         viewModel.feedItems
-            .subscribe(onNext: { (res) in
-                self.dataSource = res
+            .subscribe(onNext: { (feeds) in
+                self.dataSource = feeds
+                print("dataSource", self.dataSource.first?.title, self.dataSource.first?.stories.last?.title)
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -71,6 +73,7 @@ class FeedsViewController: UIViewController {
             .tap
             .subscribe(onNext: { [weak self] (indexPath) in
                 print("create")
+                self?.askUserUrlForNewFeed()
             })
             .disposed(by: disposeBag)
 
@@ -84,7 +87,30 @@ class FeedsViewController: UIViewController {
                 self.navigationController?.pushViewController(storyVC, animated: true)
             })
             .disposed(by: disposeBag)
+    }
 
+    func askUserUrlForNewFeed() {
+        let alertController = UIAlertController(title: "New RSS Feed", message: "Please input URL for new feed", preferredStyle: .alert)
+
+        let confirmAction = UIAlertAction(title: "Confirm", style: .default) { [weak self] (_) in
+            guard let `self` = self, let textField = alertController.textFields?.first else {
+                    return
+            }
+            if let newUrl = textField.text {
+                self.viewModel.newFeedUrlString.onNext(newUrl)
+            }
+
+        }
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in }
+
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Email"
+        }
+
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true, completion: nil)
     }
 }
 

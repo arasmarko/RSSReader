@@ -13,79 +13,100 @@ import FeedKit
 
 protocol FeedsServiceProtocol {
     func getFeeds() -> Observable<[Feed]>
+    func saveNewFeedUrlString(_ new: String)
 }
 
 class FeedsService: FeedsServiceProtocol {
-    let disposeBag = DisposeBag()
-    let feedsFromURL = PublishSubject<Feed>()
-    
-    init() {}
+    private let disposeBag = DisposeBag()
+    private let feedsFromURL = PublishSubject<Feed>()
+
+    private let savedFeedsListService = SavedFeedsListService()
+    private let feedRealmService = FeedRealmService()
+
+    let realm = try! Realm()
 
     func getFeeds() -> Observable<[Feed]> {
-        let realm = try! Realm()
         let feeds = realm.objects(Feed.self)
 
-        print("maki", loadFeedsFromUrl())
+        addDefaultRssFeedLinksToLocalDatabase()
 
+        loadFeedsFromUrl()
+        observeOnFeedsFromURL()
+
+        return Observable.collection(from: feeds)//.array(from: feeds)
+            .map({ $0.toArray() })
+            .do(onNext: { (feeds) in
+                print("Observable.array", feeds.count, feeds.first?.title, feeds.first?.stories.first?.title)
+            })
+    }
+
+    func observeOnFeedsFromURL() {
         feedsFromURL.asObservable()
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { (newFeed) in
-                FeedRealmService.add(feed: newFeed, in: realm)
+            .subscribe(onNext: { [weak self] (newFeed) in
+                guard let `self` = self else { return }
+                print("observeOnFeedsFromURL", newFeed.title, newFeed.stories.first?.title)
+                self.feedRealmService.syncRealmWithNewData(feed: newFeed)
             })
             .disposed(by: disposeBag)
-
-        return Observable.array(from: feeds)
-            .map({ $0 })
-
     }
 
     func loadFeedsFromUrl() {
-        var feedURLs: [URL] = []
-        let feedURL = URL(string: "http://images.apple.com/main/rss/hotnews/hotnews.rss")!
-        let feedURL2 = URL(string: "http://feeds.bbci.co.uk/news/world/rss.xml")!
-        let feedURL3 = URL(string: "http://www.cbn.com/cbnnews/world/feed/")!
-        let feedURL4 = URL(string: "http://feeds.reuters.com/Reuters/worldNews")!
-        feedURLs.append(feedURL)
-        feedURLs.append(feedURL2)
-        feedURLs.append(feedURL3)
-        feedURLs.append(feedURL4)
-
-        var parser: FeedParser!
+        let feedURLs: [URL] = savedFeedsListService.urlStrings.map { URL(string: $0.urlString)! }
 
         DispatchQueue.global(qos: .background).async { [weak self] in
             guard let `self` = self else { return }
-            var total = 0
+
             for url in feedURLs {
+                self.loadFeedFromUrl(url: url)
+            }
+        }
+    }
+
+    private func loadFeedFromUrl(url: URL) {
+        var parser: FeedParser!
+        parser = FeedParser(URL: url)
+        let results = parser.parse()
+        switch results {
+        case .rss(let feedData):
+            print("loaded FeedFromUrl", feedData.title, feedData.items?.count, feedData.items?.last?.title)
+            createFeedFromDataAndSaveToRealm(data: feedData)
+        default:
+            break
+        }
+    }
+
+    private func createFeedFromDataAndSaveToRealm(data: RSSFeed) {
+        let newFeed = Feed.createFeedWithStories(from: data)
+        self.feedsFromURL.onNext(newFeed)
+    }
+
+    // TODO
+    func saveNewFeedUrlString(_ new: String) {
+        guard let url = URL(string: new) else { return }
+        do {
+            try savedFeedsListService.saveNewFeedUrlString(urlString: new)
+
+            var parser: FeedParser!
+
+            DispatchQueue.global(qos: .background).async { [weak self] in
+                guard let `self` = self else { return }
                 parser = FeedParser(URL: url)
-                print("get", url)
 
                 let results = parser.parse()
                 switch results {
                 case .rss(let feed):
-                    total += 1
-                    print("IMG", feed.image?.url)
-                    let newFeed = self.createFeedWithStories(feed: feed)
-                    self.feedsFromURL.onNext(newFeed)
+                    self.createFeedFromDataAndSaveToRealm(data: feed)
                 default:
                     break
                 }
             }
-            self.feedsFromURL.onCompleted()
+        } catch {
+            print("item already saved")
         }
     }
 
-    func createFeedWithStories(feed: RSSFeed) -> Feed {
-        let stories = List<Story>()
-        for story in feed.items ?? [] {
-            if let title = story.title,
-                let link = story.link,
-                let desc = story.description {
-                    let s = Story(title: title, link: link, info: desc, imageUrl: nil)
-                stories.append(s)
-            }
-
-        }
-        let feed = Feed(title: feed.title ?? "no title", imageUrl: feed.image?.url, stories: stories)
-        return feed
+    private func addDefaultRssFeedLinksToLocalDatabase() {
+        try? savedFeedsListService.saveNewFeedUrlString(urlString: "http://images.apple.com/main/rss/hotnews/hotnews.rss")
     }
 }
