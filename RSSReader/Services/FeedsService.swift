@@ -14,15 +14,18 @@ import FeedKit
 protocol FeedsServiceProtocol {
     func getFeeds() -> Observable<[Feed]>
     func saveNewFeedUrlString(_ new: String)
+    var hasNewFeeds: PublishSubject<Int> { get set }
+    var parserError: PublishSubject<FeedParserError> { get set }
 }
 
 class FeedsService: FeedsServiceProtocol {
     private let disposeBag = DisposeBag()
     private let feedsFromURL = PublishSubject<Feed>()
-
     private let savedFeedsListService = SavedFeedsListService()
     private let feedRealmService = FeedRealmService()
 
+    var hasNewFeeds = PublishSubject<Int>()
+    var parserError = PublishSubject<FeedParserError>()
     let realm = try! Realm()
 
     func getFeeds() -> Observable<[Feed]> {
@@ -44,6 +47,10 @@ class FeedsService: FeedsServiceProtocol {
                 self.feedRealmService.syncRealmWithNewData(feed: newFeed)
             })
             .disposed(by: disposeBag)
+
+        feedRealmService.hasNewFeeds
+            .bind(to: hasNewFeeds)
+            .disposed(by: disposeBag)
     }
 
     func loadFeedsFromUrl() {
@@ -61,6 +68,8 @@ class FeedsService: FeedsServiceProtocol {
     private func loadFeedFromUrl(url: URL) {
         let parser: FeedParser? = FeedParser(URL: url)
         guard let results = parser?.parse() else {
+            parserError.onNext(.error("Parser failed"))
+            savedFeedsListService.remove(urlString: url.absoluteString)
             return
         }
         switch results {
@@ -92,5 +101,7 @@ class FeedsService: FeedsServiceProtocol {
 
     private func addDefaultRssFeedLinksToLocalDatabase() {
         try? savedFeedsListService.saveNewFeedUrlString(urlString: "http://images.apple.com/main/rss/hotnews/hotnews.rss")
+        try? savedFeedsListService.saveNewFeedUrlString(urlString: "http://www.cbn.com/cbnnews/world/feed/")
+//        try? savedFeedsListService.saveNewFeedUrlString(urlString: "http://feeds.reuters.com/Reuters/worldNews")
     }
 }

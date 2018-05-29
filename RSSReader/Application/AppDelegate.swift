@@ -34,6 +34,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
 
+        // opening application marks all new stories as read
+        UIApplication.shared.applicationIconBadgeNumber = 0
+
         return true
     }
 }

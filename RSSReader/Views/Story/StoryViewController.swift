@@ -30,6 +30,7 @@ class StoryViewController: UIViewController {
 
     func setStories(stories: List<Story>) {
         dataSource = stories.toArray()
+        guard tableView != nil else { return }
         tableView.reloadData()
     }
 

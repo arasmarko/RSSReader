@@ -7,10 +7,13 @@
 //
 
 import RealmSwift
+import RxSwift
 
 class FeedRealmService {
-    /// Adds or Updates Feed to Realm and makes sure it is unique
     var realm: Realm!
+    var hasNewFeeds = PublishSubject<Int>()
+
+    /// Adds or Updates Feed to Realm and makes sure it is unique
     func syncRealmWithNewData(feed: Feed, in realm: Realm = try! Realm()) {
         self.realm = realm
         let feedFromRealm = realm.objects(Feed.self).filter("title = '\(feed.title)'").first
@@ -27,7 +30,7 @@ class FeedRealmService {
 
     private func updateFeedWithNewStories(_ oldFeed: Feed, newFeed: Feed) {
         try! realm.write {
-            oldFeed.updateStories(from: newFeed)
+            hasNewFeeds.onNext(oldFeed.updateStories(from: newFeed))
         }
     }
 }

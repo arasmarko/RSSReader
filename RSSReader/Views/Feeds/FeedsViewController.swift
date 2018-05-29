@@ -37,8 +37,6 @@ class FeedsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = .red
     }
 
     private func setupTableView() {
@@ -53,7 +51,6 @@ class FeedsViewController: UIViewController {
         tableView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
-
         renderAddNewFeedButton()
     }
 
@@ -62,13 +59,25 @@ class FeedsViewController: UIViewController {
     }
 
     private func setupObservables() {
-        viewModel.feedItems
-            .do(onNext: { [weak self] (feeds) in
-                self?.notifyUserThereAreNewStories()
+        viewModel.newFeedItems
+            .asObservable()
+            .subscribe(onNext: { [weak self] number in
+                self?.notifyUserThereAreNewStories(number)
             })
-            .subscribe(onNext: { (feeds) in
-                self.dataSource = feeds
-                self.tableView.reloadData()
+            .disposed(by: disposeBag)
+
+        viewModel.parserError
+            .asObservable()
+            .subscribe(onNext: { [weak self] (errorMessage) in
+                self?.handleError(with: errorMessage)
+            })
+            .disposed(by: disposeBag)
+
+
+        viewModel.feedItems
+            .subscribe(onNext: { [weak self] (feeds) in
+                self?.dataSource = feeds
+                self?.tableView.reloadData()
             })
             .disposed(by: disposeBag)
 
@@ -84,37 +93,40 @@ class FeedsViewController: UIViewController {
             .subscribe(onNext: { [weak self] (indexPath) in
                 guard let `self` = self else { return }
                 let storyVC = StoryViewController(nibName: "StoryViewController", bundle: nil)
-                storyVC.viewDidLoad() // TODO
                 storyVC.setStories(stories: self.dataSource[indexPath.row].stories)
                 self.navigationController?.pushViewController(storyVC, animated: true)
             })
             .disposed(by: disposeBag)
     }
 
-    private func notifyUserThereAreNewStories() {
+    private func notifyUserThereAreNewStories(_ badgeNumber: Int) {
         let center = UNUserNotificationCenter.current()
         let content = UNMutableNotificationContent()
         content.title = "RSS Reader has something new for you"
         content.body = "Catch up by reading new stories"
         content.sound = UNNotificationSound.default()
 
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
         let identifier = "RSSReader"
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         center.add(request, withCompletionHandler: nil)
+
+        UIApplication.shared.applicationIconBadgeNumber = badgeNumber
     }
 
     func askUserUrlForNewFeed() {
-        let alertController = UIAlertController(title: "New RSS Feed", message: "Please input URL for new feed", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "New RSS Feed",
+                                                message: "Please input URL for new feed",
+                                                preferredStyle: .alert)
 
         let confirmAction = UIAlertAction(title: "Confirm", style: .default) { [weak self] (_) in
-            guard let `self` = self, let textField = alertController.textFields?.first else {
+            guard let `self` = self,
+                let textField = alertController.textFields?.first else {
                     return
             }
             if let newUrl = textField.text {
                 self.viewModel.newFeedUrlString.onNext(newUrl)
             }
-
         }
 
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in }
@@ -125,6 +137,13 @@ class FeedsViewController: UIViewController {
 
         alertController.addAction(confirmAction)
         alertController.addAction(cancelAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+
+    private func handleError(with message: String) {
+        let alertController = UIAlertController(title: "There was a problem", message: message, preferredStyle: .alert)
+        let confirmAction = UIAlertAction(title: "Ok", style: .default)
+        alertController.addAction(confirmAction)
         self.present(alertController, animated: true, completion: nil)
     }
 }

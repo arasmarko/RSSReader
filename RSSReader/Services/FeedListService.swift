@@ -38,4 +38,21 @@ class SavedFeedsListService {
 
         getFromRealmToArray()
     }
+
+    func remove(urlString: String) {
+        DispatchQueue.main.async { [weak self] in
+            guard let `self` = self else { return }
+            let saved = self.realm.objects(FeedUrlString.self)
+
+            guard let urlToDelete = saved.filter({ $0.urlString == urlString}).first else {
+                return
+            }
+
+            try! self.realm.write {
+                self.realm.delete(urlToDelete)
+            }
+
+            self.getFromRealmToArray()
+        }
+    }
 }

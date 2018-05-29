@@ -135,7 +135,6 @@
 			children = (
 				FBFBB78D20B6085200AA83B3 /* Extensions */,
 				FB5D8D8E20B488DF00F6D105 /* Info.plist */,
-				FB5D8DA720B48A0B00F6D105 /* Flows */,
 				FB5D8DA620B48A0500F6D105 /* Services */,
 				FB5D8DA520B489FF00F6D105 /* Application */,
 				FB5D8DA420B489F800F6D105 /* ViewModels */,
@@ -199,13 +198,6 @@
 				FB8CF79520BADB3B00986A74 /* FeedRealmService.swift */,
 			);
 			path = Services;
-			sourceTree = "<group>";
-		};
-		FB5D8DA720B48A0B00F6D105 /* Flows */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Flows;
 			sourceTree = "<group>";
 		};
 		FB8CF79B20BAEAAF00986A74 /* StoryTableViewCell */ = {

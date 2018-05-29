@@ -37,23 +37,30 @@ class Feed: Object {
         return feed
     }
 
-    func updateStories(from anotherFeed: Feed) {
+    /// appends new stories to feed
+    /// - Returns: number of inserted stories
+    func updateStories(from anotherFeed: Feed) -> Int {
         // TODO - find better solution for distincting
-        var existingStoryTitles = Set<String>(stories.map({ $0.title }))//stories
+        var existingStoryTitles = Set<String>(stories.map({ $0.title }))
         var storiesToInsert = [Story]()
-
+        
         for newStory in anotherFeed.stories {
             if existingStoryTitles.index(of: newStory.title) == nil {
                 existingStoryTitles.insert(newStory.title)
                 storiesToInsert.append(newStory)
             }
         }
+
         if storiesToInsert.count > 0 {
-            appendNewStoriesAndNotifyUser(storiesToInsert)
+            appendNewStoriesAndAddBadge(storiesToInsert)
+            return storiesToInsert.count
         }
+        return 0
     }
 
-    private func appendNewStoriesAndNotifyUser(_ storiesToInsert: [Story]) {
+    private func appendNewStoriesAndAddBadge(_ storiesToInsert: [Story]) {
+        let oldCount = stories.count
         stories.append(objectsIn: storiesToInsert)
+        UIApplication.shared.applicationIconBadgeNumber = stories.count - oldCount
     }
 }
