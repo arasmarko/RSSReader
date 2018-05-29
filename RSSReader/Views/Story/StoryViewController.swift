@@ -20,7 +20,6 @@ class StoryViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .red
         tableView.dataSource = self
         tableView.rowHeight = 60
         let nib = UINib(nibName: "StoryTableViewCell", bundle: nil)
